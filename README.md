@@ -1,1 +1,3 @@
-# L3_TAL_ADJAOUD_CLAUDIN_LACOUR_PLAUT_TARDOT
+# L3 MIASHS Science Cognitive : TAL
+### Membre
+ADJAOUD Sofiane, CLAUDIN Lou, LACOUR Émilien, PLAUT Grégoire, TARDOT William
