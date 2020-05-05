@@ -1,4 +1,6 @@
-# L3 MIASHS Science Cognitive : TAL
+# L3 MIASHS Parcours Sciences Cognitives
+# Traitement Automatique des Langues
+## Trouver les assassins en "A"
 
 <img src="https://pbs.twimg.com/profile_images/1005007318558347264/RUwbCB00_400x400.jpg">
 
