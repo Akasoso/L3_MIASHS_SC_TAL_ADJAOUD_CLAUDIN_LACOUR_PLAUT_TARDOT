@@ -8,7 +8,7 @@
 ADJAOUD Sofiane, CLAUDIN Lou, LACOUR Émilien, PLAUT Grégoire, TARDOT William
 
 ### Préambule
-Nous avons choisi, comme corpus, de télécharger en <i>xml</i> une page wikipédia : <a href="https://en.wikipedia.org/wiki/List_of_assassinations">List of assassinations</a>. Cette page recense tous les assassinats du monde entier, pays par pays. On y trouve quatre colonnes, pour la date, la victime, l'assassin et des informations supplémentaires. Nous l'avons donc téléchargé en anglais, pour que <b><i>nltk</i></b> puisse mieux reconnaitre les noms propres.
+Nous avons choisi, comme corpus, de télécharger en <i>xml</i> une page Wikipédia : <a href="https://en.wikipedia.org/wiki/List_of_assassinations">List of assassinations</a>. Cette page recense tous les assassinats du monde entier, pays par pays. On y trouve quatre colonnes, pour la date, la victime, l'assassin et des informations supplémentaires. Nous l'avons donc téléchargé en anglais, pour que <b><i>nltk</i></b> puisse mieux reconnaitre les noms propres.
 
 Une des limites de ce document est qu'il y a finalement assez peu d'assassins renseignés, ainsi, même si notre programme marche, il ne renvoie que quelques noms. la plupart des assasins sont inconnus.
 
@@ -21,4 +21,5 @@ Afin de lancer notre programme, c'est très simple. Vous pouvez télecharger le 
 Pour lancer en version console, exécuter le script <i>main.py</i>. Le programme va tout d'abord vous afficher le texte contenu dans le fichier xml, puis la liste de toutes les entités personnes, et enfin la liste des assassins dont le nom de famille commence par notre lettre, A.
 
 #### Interface Graphique
-Nous vous proposons également une interface graphique pour exécuter le code. Pour cela, vous avez juste besoin d'exécuter le script <i>InterfaceGraphique.py</i>. Vous pourrez alors tester les différentes options proposées.
+Nous vous proposons également une interface graphique pour exécuter le code. Pour cela, vous avez juste besoin d'exécuter le script <i>InterfaceGraphique.py</i>. Vous pourrez alors tester les différentes options proposées. Vous pouvez par exemple choisir entre le fichier <i>assassin.xml</i> ou <i>assassin2.xml</i>. Le fichier <i>assassin2.xml</i> est un fichier <i>xml</i> de la page Wikipédia : <a href="https://en.wikipedia.org/wiki/List_of_assassinations_in_Europe">List of assassinations in Europe</a>. Nous voulions etre sur que notre programme trouve des assassins en "A", avec d'autres corpus. La page des assassinats en Europe étant construite de la même manière que celle dans le monde, notre programme arrive à retrouver les assassins. 
+Pour utiliser 
