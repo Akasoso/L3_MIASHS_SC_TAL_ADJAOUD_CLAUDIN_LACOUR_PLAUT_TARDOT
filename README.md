@@ -21,4 +21,4 @@ Afin de lancer notre programme, c'est très simple. Vous pouvez télecharger le 
 Pour lancer en version console, exécuter le script <i>main.py</i>. Le programme va tout d'abord vous afficher le texte contenu dans le fichier xml, puis la liste de toutes les entités personnes, et enfin la liste des assassins dont le nom de famille commence par notre lettre, A.
 
 #### Interface Graphique
-Nous vous proposons également une interface graphique pour exécuter le code. Pour cela, vous avez juste besoin d'exécuter le script <i>FileSelecter.py</i>. Vous pourrez alors tester les différentes options proposées.
+Nous vous proposons également une interface graphique pour exécuter le code. Pour cela, vous avez juste besoin d'exécuter le script <i>InterfaceGraphique.py</i>. Vous pourrez alors tester les différentes options proposées.
