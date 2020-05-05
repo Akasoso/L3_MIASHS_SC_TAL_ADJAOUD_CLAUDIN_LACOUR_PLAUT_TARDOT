@@ -5,14 +5,20 @@ Created on Thu Apr 30 16:15:13 2020
 @author: Gregoire
 """
 
-#DEBUT
+#IMPORT
+
+
 
 import nltk
 import re
 import lxml.etree as ET
 from nltk.chunk import tree2conlltags
 
+
+
 #FUNCTIONS
+
+
 
 # Transforme le .xml en texte brut
 def transformer(nomfichier):
@@ -28,8 +34,6 @@ def transformer(nomfichier):
 #def prepare(text):
 def clean(text):
     text = re.sub(r'(}}\n\|)(.*?)(\n\|)'," ", text) #enleve la ligne de la victime
-    #text = re.sub(r'[\]]',"", text) #enleve les symboles ']'
-    #text = re.sub(r'[\[]',"", text) #enleve les symboles '['
     text = re.sub(r'<\s*\w*(.*?)\/*\s*\w*>',"", text) #enleve le texte entre '<...>'
     text = re.sub(r'[\|]'," ", text) #enleve les symboles '|' et les remplace par des espaces
     return text
@@ -41,6 +45,7 @@ def preprocess(doc):
     doc = nltk.pos_tag(doc)
     return doc
 
+# Categorisation des personnes
 def wordextractor(tuple1):
     #bring the tuple back to lists to work with it
     words, tags, pos = zip(*tuple1)
@@ -57,15 +62,11 @@ def wordextractor(tuple1):
         i=i+1
     return c
 
-#def test(tree):
-#    d = list()
-#    for i in tree:
-#        if tree[i][2] == 'B-PERSON' or tree[i][2] == 'I-PERSON':
-#            d = d+[tree[i]]
-#    return d
 
 
 #MAIN
+
+
 
 # Preparation :
 # telecharger https://en.wikipedia.org/wiki/Special:Export/List_of_assassinations
@@ -79,7 +80,6 @@ rawText = transformer("./assassin.xml")
 # On enleve dans ce texte tous les caractères inutiles, afin de ne traiter que du texte français
 #rawText = prepare(rawText)
 cleanText = clean(rawText)
-#print("Texte nettoye : \n" +cleanText)
 
 
 print('---------------------------------------------------------------------')
@@ -88,14 +88,12 @@ print('---------------------------------------------------------------------')
 print(cleanText)
 
 
-# PREPROCESSING :
-#text = preprocess(rawText)
+# Preprocessing :
+
 text = preprocess(cleanText)
-#chunks = nltk.ne_chunk(text, binary=True)    #EN = entites nommees
 chunks = nltk.ne_chunk(text) #Entités nommés séparées en PERSON, ORGA, GPE...
 
 tree = tree2conlltags(chunks)
-#testTree = test(tree)
 extractTree = wordextractor(tree)
 
 
@@ -103,25 +101,24 @@ print('---------------------------------------------------------------------')
 print("Texte balisée avec NLTK, voici maintenant les noms propres trouvées : ")
 print('---------------------------------------------------------------------')
 
-line = ""
+line = "" #Chaque ligne contenant la liste d'entités composant une personnes. Ex : [('James', 'NNP'), ('Charles', 'NNP'), ('Kopp', 'NNP')]
 listAPerson = [] #Liste assassins dont le nom commence par A
 
 named_entities = []
 # parcours les sous arbres 
 for t in chunks.subtrees():
-    # if its a N.E , appeend to list of names entities
-    #if t.label() == 'NE':
+    # si c'est une personne
     if t.label() == 'PERSON':
-        print(t.leaves())
-        line = t.leaves() #recuperer la personne actuelle
-        lastname = line[len(line)-1][0] #le dernier mot de cette liste est le nom de famille
+        print(t.leaves()) 
+        line = t.leaves() #recuperer la personne actuelle dans notre line
+        lastname = line[len(line)-1][0] #le dernier mot de cette liste est le nom de famille. Ex : 'Kopp'
         firstname = "" #les autres sont ses prénoms
-        for i in range(len(line)-1):
-            firstname = firstname + " " + line[i][0]
-        if(lastname[0] == '' and firstname != "" and lastname != "" and lastname != "Assassinations" and lastname != "Alliance" and lastname != "Army" and lastname != "Assassination" and lastname != "Assassinated" and lastname != "Ana" and lastname != "Archdiocese"): 
-            #On affiche tous ceux dont le nom de famille commence par A
-            name = firstname + " " + lastname
-            if name not in listAPerson: 
+        for i in range(len(line)-1): #On parcourt toutes la liste de prénoms
+            firstname = firstname + " " + line[i][0] #et on les ajoute. Ex : 'James Charles'
+        if(lastname[0] == 'A' and firstname != "" and lastname != "" and lastname != "Assassinations" and lastname != "Alliance" and lastname != "Army" and lastname != "Assassination" and lastname != "Assassinated" and lastname != "Ana" and lastname != "Archdiocese"): 
+            #On affiche tous ceux dont le nom de famille commence par A, et on retire certains mots si notre extracteur s'est trompé dans la catégorisation
+            name = firstname + " " + lastname 
+            if name not in listAPerson: #On ajoute cette personne à la liste si elle n'y est pas déjà
                 listAPerson.append(name)
             
         named_entities.append(t.leaves())  
@@ -132,7 +129,8 @@ print('---------------------------------------------------------------------')
 print("Parmi ceux la, voici les assassins dont le nom commence par 'A'")
 print('---------------------------------------------------------------------')
 
+print(listAPerson) #On affiche la liste des assassins, en String
 
-print(listAPerson)
+
 
 #FIN
