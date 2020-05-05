@@ -203,11 +203,11 @@ class Accueil(QMainWindow):
         fileMenu.addAction(quit)
         quit.triggered.connect(qApp.exit)
         
-        mode = QAction("Basculer entre le mode simple et avancé", self)
+        mode = QAction("Utilisation", self)
         mode.setShortcut("Ctrl+M")
         parametersMenu.addAction(mode)
 
-        summary = QAction("Sommaire", self)
+        summary = QAction("Options", self)
         summary.setShortcut("Ctrl+S")
         helpMenu.addAction(summary)
 
