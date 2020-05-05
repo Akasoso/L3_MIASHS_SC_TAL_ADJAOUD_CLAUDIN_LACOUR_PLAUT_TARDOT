@@ -18,7 +18,7 @@ C'était également compliqué de décoder le fichier <i>xml</i> généré. En e
 Afin de lancer notre programme, c'est très simple. Vous pouvez télecharger le github. Il faut juste mettre dans le même dossier les trois fichiers suivants : <i>main.py</i>, <i>FileSelecter.py</i> et <i>assassin.xml</i>.
 
 #### Console
-Pour lancer en version console, éxécuter le script <i>main.py</i>. Le programme va tout d'abord vous afficher le texte contenu dans le fichier xml, puis la liste de toutes les entités personnes, et enfin la liste des assassins dont le nom de famille commence par notre lettre, A.
+Pour lancer en version console, exécuter le script <i>main.py</i>. Le programme va tout d'abord vous afficher le texte contenu dans le fichier xml, puis la liste de toutes les entités personnes, et enfin la liste des assassins dont le nom de famille commence par notre lettre, A.
 
-#### Interfac Graphique
-Nous vous proposons également une interface graphique pour éxécuter le code. Pour cela, vous avez juste besoin d'éxécuter le script <i>FileSelecter.py</i>. Vous pourrez alors tester les différentes options proposées.
+#### Interface Graphique
+Nous vous proposons également une interface graphique pour exécuter le code. Pour cela, vous avez juste besoin d'exécuter le script <i>FileSelecter.py</i>. Vous pourrez alors tester les différentes options proposées.
