@@ -216,7 +216,7 @@ class Accueil(QMainWindow):
         #♥ Boutons
         self.bouton1 = QPushButton("Nettoyer/Traiter")
         self.bouton2 = QPushButton("Noms propres")
-        self.bouton3 = QPushButton("Assassin Lettre A")
+        self.bouton3 = QPushButton("Assassins Lettre A")
         self.bouton1.setDisabled(1);
         self.bouton2.setDisabled(1);
         self.bouton3.setDisabled(1);
