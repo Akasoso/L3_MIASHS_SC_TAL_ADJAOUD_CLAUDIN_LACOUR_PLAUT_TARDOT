@@ -40,6 +40,8 @@ class Accueil(QMainWindow):
         self.rawText = self.transformer(file)
         self.inputField.setText(self.rawText)
         self.bouton1.setDisabled(0)
+        self.bouton2.setDisabled(1)
+        self.bouton3.setDisabled(1)
         return file
 
     
@@ -113,22 +115,15 @@ class Accueil(QMainWindow):
         for t in chunks.subtrees():
             # si c'est une personne
             if t.label() == 'PERSON':
-                line = t.leaves() #recuperer la personne actuelle dans notre line
-                lastname = line[len(line)-1][0] #le dernier mot de cette liste est le nom de famille. Ex : 'Kopp'
-                firstname = "" #les autres sont ses prénoms
-                for i in range(len(line)-1): #On parcourt toutes la liste de prénoms
-                    firstname = firstname + " " + line[i][0] #et on les ajoute. Ex : 'James Charles'
-                if(lastname[0] == 'A' and firstname != "" and lastname != "" and lastname != "Assassinations" and lastname != "Alliance" and lastname != "Army" and lastname != "Assassination" and lastname != "Assassinated" and lastname != "Ana" and lastname != "Archdiocese"): 
-                    #On affiche tous ceux dont le nom de famille commence par A, et on retire certains mots si notre extracteur s'est trompé dans la catégorisation
-                    name = firstname + " " + lastname 
-                    if name not in self.listAPerson: #On ajoute cette personne à la liste si elle n'y est pas déjà
-                        self.listAPerson.append(name)
-                    
                 named_entities.append(t.leaves())  
         
         strname="NOM : "
+        strDec = ""
         for name in named_entities:
-            strname = strname + self.convertTuple(name[0]) + '\nNOM : '
+            for i in range(len(name)):
+                strDec = strDec + " " + name[i][0]
+            strname = strname + strDec + "  (NNP)" + '\nNOM : '
+            strDec = ""
         self.outputField.setText(str1+str2+str3+strname)
         self.bouton3.setDisabled(0)
         
@@ -147,12 +142,10 @@ class Accueil(QMainWindow):
         line = "" #Chaque ligne contenant la liste d'entités composant une personnes. Ex : [('James', 'NNP'), ('Charles', 'NNP'), ('Kopp', 'NNP')]
         listAPerson = [] #Liste assassins dont le nom commence par A
         
-        named_entities = []
         # parcours les sous arbres 
         for t in chunks.subtrees():
             # si c'est une personne
             if t.label() == 'PERSON':
-                #print(t.leaves()) 
                 line = t.leaves() #recuperer la personne actuelle dans notre line
                 lastname = line[len(line)-1][0] #le dernier mot de cette liste est le nom de famille. Ex : 'Kopp'
                 firstname = "" #les autres sont ses prénoms
@@ -164,8 +157,6 @@ class Accueil(QMainWindow):
                     if name not in listAPerson: #On ajoute cette personne à la liste si elle n'y est pas déjà
                         listAPerson.append(name)
                     
-                named_entities.append(t.leaves())  
-        
         strname=""
         for name in listAPerson :
             strname = strname + self.convertTuple2(name) + '\n'
@@ -222,7 +213,7 @@ class Accueil(QMainWindow):
         hboxInput.addWidget(label)
         hboxInput.addWidget(self.inputField)
 
-        # Boutons
+        #♥ Boutons
         self.bouton1 = QPushButton("Nettoyer/Traiter")
         self.bouton2 = QPushButton("Noms propres")
         self.bouton3 = QPushButton("Assassin Lettre A")
