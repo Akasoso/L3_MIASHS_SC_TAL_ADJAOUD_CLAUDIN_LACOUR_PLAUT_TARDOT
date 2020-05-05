@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri May  1 18:47:12 2020
-
 @author: MSI-Sofiane
 """
 
@@ -11,67 +10,58 @@ import nltk
 import re
 import lxml.etree as ET
 from nltk.chunk import tree2conlltags
-#try:
- #   from StringIO import StringIO
-#except ImportError:
- #   from io import StringIO
 
 
 class Accueil(QMainWindow):
     rawText = ""
+    nomFile = " "
     cleanText = ""
     fileField = 0
     inputField = 0
     outputField = 0
+    bouton1 = ""
+    bouton2 = ""
+    bouton3 = ""
+    
     
     def __init__(self):
         super().__init__()
         self.afficherGUI()
     
     #FUNCTIONS
+        
     def selectFile(self):
         file = str(QFileDialog.getOpenFileName(self, "Sélectionner un fichier"))
         file = re.sub(r'[\(\'].*?[\',)]',"",file)
+        nomFile = re.split(r'(\w*).xml',file)
+        self.nomFile = nomFile[1]
+        print("Ouverture du fichier " + self.nomFile + ".xml")
         self.fileField.setText(file)
-        # Preparation :
-        # telecharger https://en.wikipedia.org/wiki/Special:Export/List_of_assassinations
-        # renommer en "assassin.xml" et mettre dans le meme dossier que le script
-        # On ne garde que la balise xml text, pour traiter non plus un fichier xml mais un texte
-        #print(file)
-         #fichier = open(nomfichier, 'rb')
-        #contenu = fichier.read()
-        #tree1 = ET.parse(contenu)
         self.rawText = self.transformer(file)
         self.inputField.setText(self.rawText)
-        #print("Texte brut : \n" +rawText)
-        #print(rawText)
+        self.bouton1.setDisabled(0)
         return file
 
     
     # Transforme le .xml en texte brut
     def transformer(self, nomfichier):
-        #fichier = open(nomfichier, 'rb')
-        #contenu = fichier.read()
-        #tree1 = ET.parse(contenu)
         tree1 = ET.parse(nomfichier)
         root = tree1.getroot()
-        text = root[1][3][8].text #avoir le texte de la balise texte (2eme balise, puis 4eme, puis 9eme)
-        #print(text)
+        if(self.nomFile == "assassin2"):
+            text = root[1][3][7].text #avoir le texte de la balise texte (2eme balise, puis 4eme, puis 8eme)
+        else:
+            text = root[1][3][8].text #avoir le texte de la balise texte (2eme balise, puis 4eme, puis 9eme)
         return text
     
     # Supprime tous les caracteres inutiles du texte
-    #def prepare(text):
     def clean(self, text):
         text = re.sub(r'(}}\n\|)(.*?)(\n\|)'," ", text) #enleve la ligne de la victime
-        #text = re.sub(r'[\]]',"", text) #enleve les symboles ']'
-        #text = re.sub(r'[\[]',"", text) #enleve les symboles '['
         text = re.sub(r'<\s*\w*(.*?)\/*\s*\w*>',"", text) #enleve le texte entre '<...>'
         text = re.sub(r'[\|]'," ", text) #enleve les symboles '|' et les remplace par des espaces
         return text
     
     # Separation de chaque tokens du texte et categorisation
     def preprocess(self, doc):
-        #doc = nltk.sent_tokenize(doc)
         doc = nltk.word_tokenize(doc)
         doc = nltk.pos_tag(doc)
         return doc
@@ -92,15 +82,15 @@ class Accueil(QMainWindow):
             i=i+1
         return c
     
-    def traiter(self):       
+    def traiter(self): 
         # Nettoyage :
         # On enleve dans ce texte tous les caractères inutiles, afin de ne traiter que du texte français
-        #rawText = prepare(rawText)
         self.cleanText = self.clean(self.rawText)
         str1 ='---------------------------------------------------------------------\n'
         str2 ="Texte nettoyé, sans caractères inutiles :\n"
         str3 ='---------------------------------------------------------------------\n'
         self.inputField.setText(str1+str2+str3+self.cleanText)
+        self.bouton2.setDisabled(0)
     
     def nomPropres(self):
         # Preprocessing :
@@ -123,7 +113,6 @@ class Accueil(QMainWindow):
         for t in chunks.subtrees():
             # si c'est une personne
             if t.label() == 'PERSON':
-                #print(t.leaves()) 
                 line = t.leaves() #recuperer la personne actuelle dans notre line
                 lastname = line[len(line)-1][0] #le dernier mot de cette liste est le nom de famille. Ex : 'Kopp'
                 firstname = "" #les autres sont ses prénoms
@@ -141,6 +130,7 @@ class Accueil(QMainWindow):
         for name in named_entities:
             strname = strname + self.convertTuple(name[0]) + '\nNOM : '
         self.outputField.setText(str1+str2+str3+strname)
+        self.bouton3.setDisabled(0)
         
     def AssassinA(self):
         # Preprocessing :
@@ -191,7 +181,7 @@ class Accueil(QMainWindow):
     
     def afficherGUI(self):
         
-        self.resize(1000, 300)
+        self.resize(1000, 800)
         self.setWindowTitle("Application TAL")
         bar = self.menuBar()
         fileMenu = bar.addMenu("Fichier")
@@ -220,7 +210,6 @@ class Accueil(QMainWindow):
         self.fileField = QLineEdit()
         openFileButton = QPushButton("Ouvrir", self)
         openFileButton.clicked.connect(self.selectFile)
-        #QObject.connect(openFileButton, SIGNAL("clicked()"), self.selectFile)
         hboxFile = QHBoxLayout()
         hboxFile.addWidget(label)
         hboxFile.addWidget(self.fileField)
@@ -233,16 +222,20 @@ class Accueil(QMainWindow):
         hboxInput.addWidget(label)
         hboxInput.addWidget(self.inputField)
 
-        bouton1 = QPushButton("Nettoyer/Traiter")
-        bouton2 = QPushButton("Noms propres")
-        bouton3 = QPushButton("Assassin Lettre A")
+        # Boutons
+        self.bouton1 = QPushButton("Nettoyer/Traiter")
+        self.bouton2 = QPushButton("Noms propres")
+        self.bouton3 = QPushButton("Assassin Lettre A")
+        self.bouton1.setDisabled(1);
+        self.bouton2.setDisabled(1);
+        self.bouton3.setDisabled(1);
         hboxButton = QHBoxLayout()
-        hboxButton.addWidget(bouton1)
-        hboxButton.addWidget(bouton2)
-        hboxButton.addWidget(bouton3)
-        bouton1.clicked.connect(self.traiter)
-        bouton2.clicked.connect(self.nomPropres)
-        bouton3.clicked.connect(self.AssassinA)
+        hboxButton.addWidget(self.bouton1)
+        hboxButton.addWidget(self.bouton2)
+        hboxButton.addWidget(self.bouton3)
+        self.bouton1.clicked.connect(self.traiter)
+        self.bouton2.clicked.connect(self.nomPropres)
+        self.bouton3.clicked.connect(self.AssassinA)
         
         # Texte en sortie
         label = QLabel("Résultat")
