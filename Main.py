@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Éditeur de Spyder
+Created on Thu Apr 30 16:15:13 2020
 
-Ceci est un script temporaire.
+@author: Gregoire
 """
 
 #DEBUT
@@ -21,17 +21,17 @@ def transformer(nomfichier):
     #tree1 = ET.parse(contenu)
     tree1 = ET.parse(nomfichier)
     root = tree1.getroot ()
-    text = root[1][3][7].text #avoir le texte de la balise texte (2eme balise, puis 4eme, puis 8eme)
+    text = root[1][3][8].text #avoir le texte de la balise texte (2eme balise, puis 4eme, puis 9eme)
     return text
 
 # Supprime tous les caracteres inutiles du texte
 #def prepare(text):
 def clean(text):
-    text = re.sub(r'[\]]',"", text) #enleve les symboles ']'
-    text = re.sub(r'[\[]',"", text) #enleve les symboles '['
-    text = re.sub(r'[\|]'," ", text) #enleve les symboles '|' et les remplace par des espaces
+    text = re.sub(r'(}}\n\|)(.*?)(\n\|)'," ", text) #enleve la ligne de la victime
+    #text = re.sub(r'[\]]',"", text) #enleve les symboles ']'
+    #text = re.sub(r'[\[]',"", text) #enleve les symboles '['
     text = re.sub(r'<\s*\w*(.*?)\/*\s*\w*>',"", text) #enleve le texte entre '<...>'
-    text = re.sub(r'({{)(.*?)(}})',"", text) #enleve le texte entre '{{...}}' 
+    text = re.sub(r'[\|]'," ", text) #enleve les symboles '|' et les remplace par des espaces
     return text
 
 # Separation de chaque tokens du texte et categorisation
@@ -80,29 +80,31 @@ rawText = transformer("./assassin.xml")
 #rawText = prepare(rawText)
 cleanText = clean(rawText)
 #print("Texte nettoye : \n" +cleanText)
-#print(cleanText)
+
+
+print('---------------------------------------------------------------------')
+print("Texte nettoyé, sans caractères inutiles :")
+print('---------------------------------------------------------------------')
+print(cleanText)
+
 
 # PREPROCESSING :
 #text = preprocess(rawText)
 text = preprocess(cleanText)
 #chunks = nltk.ne_chunk(text, binary=True)    #EN = entites nommees
 chunks = nltk.ne_chunk(text) #Entités nommés séparées en PERSON, ORGA, GPE...
-#https://stackoverflow.com/questions/31836058/nltk-named-entity-recognition-to-a-python-list
+
 tree = tree2conlltags(chunks)
 #testTree = test(tree)
 extractTree = wordextractor(tree)
 
-# Patterns
-#pattern = 'PERSON: {<NNP>*}'
-
-# Parsing
-#cp = nltk.RegexpParser(pattern)
-#cs = cp.parse(tagged)
-#cs = cp.parse(text)
-#print(cs)
 
 print('---------------------------------------------------------------------') 
 print("Texte balisée avec NLTK, voici maintenant les noms propres trouvées : ")
+print('---------------------------------------------------------------------')
+
+line = ""
+listAPerson = [] #Liste assassins dont le nom commence par A
 
 named_entities = []
 # parcours les sous arbres 
@@ -110,27 +112,27 @@ for t in chunks.subtrees():
     # if its a N.E , appeend to list of names entities
     #if t.label() == 'NE':
     if t.label() == 'PERSON':
-        #print(t.leaves())
+        print(t.leaves())
+        line = t.leaves() #recuperer la personne actuelle
+        lastname = line[len(line)-1][0] #le dernier mot de cette liste est le nom de famille
+        firstname = "" #les autres sont ses prénoms
+        for i in range(len(line)-1):
+            firstname = firstname + " " + line[i][0]
+        if(lastname[0] == '' and firstname != "" and lastname != "" and lastname != "Assassinations" and lastname != "Alliance" and lastname != "Army" and lastname != "Assassination" and lastname != "Assassinated" and lastname != "Ana" and lastname != "Archdiocese"): 
+            #On affiche tous ceux dont le nom de famille commence par A
+            name = firstname + " " + lastname
+            if name not in listAPerson: 
+                listAPerson.append(name)
+            
         named_entities.append(t.leaves())  
 #print (named_entities)
+        
     
 print('---------------------------------------------------------------------')
+print("Parmi ceux la, voici les assassins dont le nom commence par 'A'")
+print('---------------------------------------------------------------------')
 
-#named_entities2 = []
-# parcours les sous arbres 
-#for y in chunks2.subtrees():
-    # if its a N.E , appeend to list of names entities
-    #if y.label() == 'PERSON':
-        ##print(t.leaves())
-        #named_entities2.append(t.leaves())  
-#print (named_entities2) #affichage liste des personnes
 
-#TRI DES NOMS PROPRES POUR GARDER CEUX QUI COMMENCE PAR A
-#(A([\w-]*)+) # selectionne les mots commençant par ‘A’ (majuscule)
-#pattern = re.compile("^(\w*\s)*A(\w*\s?)+")#regex noms commençant par A
-
-#A FAIRE
-        
-print('DONE !')
+print(listAPerson)
 
 #FIN
