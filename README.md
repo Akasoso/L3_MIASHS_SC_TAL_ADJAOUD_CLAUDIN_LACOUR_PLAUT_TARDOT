@@ -15,7 +15,7 @@ Une des limites de ce document est qu'il y a finalement assez peu d'assassins re
 C'était également compliqué de décoder le fichier <i>xml</i> généré. En effet, les colonnes n'existent plus en xml, et c'est donc compliqué une fois l'étiquettage en entité fait, de revenir en arrière pour trouver la ligne ou la colonne correspondante a une personne par exemple. 
 
 ### Installation
-Afin de lancer notre programme, c'est très simple. Vous pouvez télecharger le github. Il faut juste mettre dans le même dossier les trois fichiers suivants : <i>main.py</i>, <i>FileSelecter.py</i> et <i>assassin.xml</i>.
+Afin de lancer notre programme, c'est très simple. Vous pouvez télecharger le github. Il faut juste mettre dans le même dossier les quatre fichiers suivants : <i>main.py</i>, <i>FileSelecter.py</i>, <i>assassin.xml</i> et <i>assassin2.xml</i>.
 
 #### Console
 Pour lancer en version console, exécuter le script <i>main.py</i>. Le programme va tout d'abord vous afficher le texte contenu dans le fichier xml, puis la liste de toutes les entités personnes, et enfin la liste des assassins dont le nom de famille commence par notre lettre, A.
